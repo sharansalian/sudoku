@@ -1,4 +1,4 @@
-package io.sharan.sudoku
+package io.sharan.sudoku.view.custom
 
 import android.content.Context
 import android.graphics.Canvas
@@ -18,6 +18,8 @@ class SudokuBoardView(context: Context, attributeSet: AttributeSet) : View(conte
 
     private var selectedRow = -1
     private var selectedCol = -1
+
+    private var listener: SudokuBoardView.OnTouchListener? = null
 
     private val thickLinePaint = Paint().apply {
         style = Paint.Style.STROKE
@@ -123,9 +125,24 @@ class SudokuBoardView(context: Context, attributeSet: AttributeSet) : View(conte
     }
 
     private fun handleTouchEvent(x: Float, y: Float) {
-        selectedRow = (y / cellSizePixels).toInt()
-        selectedCol = (x / cellSizePixels).toInt()
+        val possibleSelectedRow = (y / cellSizePixels).toInt()
+        val possibleSelectedCol = (x / cellSizePixels).toInt()
+
+        listener?.onCellTouched(possibleSelectedRow, possibleSelectedCol)
+    }
+
+    fun updateSelectedCellUi(row: Int, col: Int) {
+        selectedRow = row
+        selectedCol = col
         // The render is not validate so it will redraw calling onDraw
         invalidate()
+    }
+
+    fun registerListener(listener: OnTouchListener) {
+        this.listener = listener
+    }
+
+    interface OnTouchListener {
+        fun onCellTouched(row: Int, col: Int)
     }
 }
