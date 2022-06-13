@@ -15,6 +15,7 @@ class SudokuGame {
 
     init {
         val cells = List(9 * 9) { i -> Cell(i / 9, i % 9, i % 9) }
+
         board = Board(9, cells)
 
         selectedCellLiveData.postValue(Pair(selectedRow, selectedCol))
@@ -24,13 +25,17 @@ class SudokuGame {
     fun handleInput(number: Int) {
         if (selectedRow == -1 || selectedCol == -1) return
 
+        if(!board.getCell(selectedRow, selectedCol).isStartingCell) return
+
         board.getCell(selectedRow, selectedCol).value = number
         cellsLiveData.postValue(board.cells)
     }
 
     fun updateSelectedCell(row: Int, column: Int) {
-        selectedRow = row
-        selectedCol = column
-        selectedCellLiveData.postValue(Pair(row, column))
+        if (!board.getCell(row, column).isStartingCell) {
+            selectedRow = row
+            selectedCol = column
+            selectedCellLiveData.postValue(Pair(row, column))
+        }
     }
 }
