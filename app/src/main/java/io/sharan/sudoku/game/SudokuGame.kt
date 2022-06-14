@@ -67,4 +67,15 @@ class SudokuGame {
         }
         highLightedKeysLiveData.postValue(curNotes)
     }
+
+    fun delete() {
+        val cell = board.getCell(selectedRow, selectedCol)
+        if(isTakingNotes) {
+            cell.notes.clear()
+            highLightedKeysLiveData.postValue(setOf())
+        } else {
+            cell.value = 0
+        }
+        cellsLiveData.postValue(board.cells)
+    }
 }

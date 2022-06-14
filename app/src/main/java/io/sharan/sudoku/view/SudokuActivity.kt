@@ -1,6 +1,7 @@
 package io.sharan.sudoku.view
 
 import android.graphics.Color
+import android.graphics.PorterDuff
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
@@ -22,6 +23,8 @@ class SudokuActivity : AppCompatActivity(), SudokuBoardView.OnTouchListener {
 
     private lateinit var notesButton: ImageButton
 
+    private lateinit var deleteButton: ImageButton
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sudoku)
@@ -36,6 +39,7 @@ class SudokuActivity : AppCompatActivity(), SudokuBoardView.OnTouchListener {
         val buttonEight = findViewById<Button>(R.id.eightButton)
         val buttonNine = findViewById<Button>(R.id.nineButton)
         notesButton = findViewById<ImageButton>(R.id.notesButton)
+        deleteButton = findViewById(R.id.deleteButton)
 
         numberButtons = listOf<Button>(
             buttonOne,
@@ -62,21 +66,22 @@ class SudokuActivity : AppCompatActivity(), SudokuBoardView.OnTouchListener {
         }
 
         notesButton.setOnClickListener { viewModel.sudokuGame.changeNoteTakingState() }
+        deleteButton.setOnClickListener { viewModel.sudokuGame.delete() }
     }
 
     private fun updateHighlightedKeysUi(set: Set<Int>?) = set?.let {
         numberButtons.forEachIndexed { index, button ->
-            val color = if(set.contains(index + 1)) ContextCompat.getColor(this, R.color.purple_500) else Color.LTGRAY
-            button.setBackgroundColor(color)
+            val color = if (set.contains(index + 1)) ContextCompat.getColor(
+                this,
+                R.color.purple_500
+            ) else Color.LTGRAY
+            button.background.setColorFilter(color, PorterDuff.Mode.MULTIPLY)
         }
     }
 
     private fun updateNoteTakingUi(isNoteTaking: Boolean?) = isNoteTaking?.let {
-        if (it) {
-            notesButton.setBackgroundColor(ContextCompat.getColor(this, R.color.purple_500))
-        } else {
-            notesButton.setBackgroundColor(Color.LTGRAY)
-        }
+        val color = if (it) ContextCompat.getColor(this, R.color.purple_500) else Color.LTGRAY
+        notesButton.background.setColorFilter(color, PorterDuff.Mode.MULTIPLY)
     }
 
     private fun updateCells(cells: List<Cell>?) = cells?.let {
