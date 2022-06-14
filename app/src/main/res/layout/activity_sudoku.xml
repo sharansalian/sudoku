@@ -78,7 +78,7 @@
 
         <ImageButton
             android:id="@+id/notesButton"
-            android:src="@drawable/ic_android_black_24dp"
+            android:src="@drawable/edit_pen_black"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="9" />
